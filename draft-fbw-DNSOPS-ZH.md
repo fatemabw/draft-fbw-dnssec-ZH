@@ -19,11 +19,11 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "Zone Hopping: A method to prevent Zone-walking in DNSSEC-NSEC"
+abbrev: "ZH: preventing zone-walking in DNSSEC-NSEC"
 category: info
 
-docname: draft-todo-yourname-protocol-latest
+docname: draft-fbw-DNSOPS-ZH-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -45,9 +45,17 @@ venue:
 
 author:
  -
-    fullname: Your Name Here
-    organization: Your Organization Here
-    email: your.email@example.com
+    fullname: Fatema Bannat Wala
+    organization: ESnet
+    email: fatemebw@es.net
+ 
+    fullname: Stephan K Bohacek
+    organization: University of Delaware
+    email: bohacek@udel.edu
+ 
+    fullname: Nick Buraglio
+    organization: ESnet
+    email: buraglio@es.net
 
 normative:
 
