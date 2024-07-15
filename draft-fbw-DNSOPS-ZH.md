@@ -1,26 +1,6 @@
 ---
-###
-# Internet-Draft Markdown Template
-#
-# Rename this file from draft-todo-yourname-protocol.md to get started.
-# Draft name format is "draft-<yourname>-<workgroup>-<name>.md".
-#
-# For initial setup, you only need to edit the first block of fields.
-# Only "title" needs to be changed; delete "abbrev" if your title is short.
-# Any other content can be edited, but be careful not to introduce errors.
-# Some fields will be set automatically during setup if they are unchanged.
-#
-# Don't include "-00" or "-latest" in the filename.
-# Labels in the form draft-<yourname>-<workgroup>-<name>-latest are used by
-# the tools to refer to the current version; see "docname" for example.
-#
-# This template uses kramdown-rfc: https://github.com/cabo/kramdown-rfc
-# You can replace the entire file if you prefer a different format.
-# Change the file extension to match the format (.xml for XML, etc...)
-#
-###
-title: "Zone Hopping: A method to prevent Zone-walking in DNSSEC-NSEC"
-abbrev: "ZH: preventing zone-walking in DNSSEC-NSEC"
+title: "A method to prevent Zone-walking in DNSSEC-NSEC"
+abbrev: "Preventing zone-walking in DNSSEC-NSEC"
 category: info
 
 docname: draft-fbw-DNSOPS-ZH-latest
@@ -30,42 +10,49 @@ date:
 consensus: true
 v: 3
 area: AREA
-workgroup: WG Working Group
+workgroup: DNSOP Working Group
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+ - DNSOp
+ - Zone Walking
+ - DNSSEC-NSEC
 venue:
   group: WG
   type: Working Group
   mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  arch: https://datatracker.ietf.org/wg/dnsop/
+  github: fatemabw/draft-fbw-dnssec-ZH
+  latest: https://github.com/fatemabw/draft-fbw-dnssec-ZH
 
 author:
  -
+    ins: F. Wala
     fullname: Fatema Bannat Wala
-    organization: ESnet
+    organization: Energy Sciences Network
     email: fatemebw@es.net
- 
+ -
+    ins: S. Bohacek
     fullname: Stephan K Bohacek
     organization: University of Delaware
     email: bohacek@udel.edu
- 
+ -  
+    ins: N. Buraglio
     fullname: Nick Buraglio
-    organization: ESnet
-    email: buraglio@es.net
+    organization: Energy Sciences Network
+    email: buraglio@forwardingplane.net
 
 normative:
-
+  RFC2119:
 informative:
-
+  RFC9364:
+  RFC4470:
+  RFC5155:
+  IEEE-ZoneHopping:
+    target: https://dsn2024uq.github.io/Proceedings/pdfs/DSN-S2024-3LLnxbOIgEGedw7VY2pz6a/957000a104/957000a104.pdf
+    title: "Zone-Hopping: Sensitive Information Leakage Prevention for DNSSEC-NSEC"
 
 --- abstract
 
-TODO Abstract
-
+DNS Security Extension (DNSSEC) as defined by [RFC9364] was developed to address significant security integrity flaws in DNS. Within certain circumstances, information leakage may be possible stemming from a known DNSSEC vulnerability that facilitates a process known as zone walking, which enables the efficient collection of all FQDNs from a given environment.
 
 --- middle
 
@@ -78,11 +65,24 @@ TODO Introduction
 
 {::boilerplate bcp14-tagged}
 
+Zone Walking:
+
+DNSSEC: [RFC9364]
+
+NSEC3 White Lies:
+
+Black Lies (BL):
+
+
+# Practical Considerations:
+[RFC5155]
+[RFC4470]
 
 # Security Considerations
 
-TODO Security
+## IP Address Discovery
 
+## Domain Enumeration
 
 # IANA Considerations
 
