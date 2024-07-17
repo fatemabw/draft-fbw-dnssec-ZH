@@ -136,7 +136,6 @@ internal domains from being leaked to the public Internet. While this architectu
 
 This document has no IANA actions.
 
-
 --- back
 
 # Acknowledgments
