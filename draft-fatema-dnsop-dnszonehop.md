@@ -3,7 +3,7 @@ title: "A method to prevent Zone-walking in DNSSEC-NSEC"
 abbrev: "Preventing zone-walking in DNSSEC-NSEC"
 category: info
 
-docname: draft-fbw-DNSOPS-ZH-latest
+docname: draft-fatema-dnsop-dnszonehop-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -52,16 +52,24 @@ informative:
 
 --- abstract
 
-DNS Security Extension (DNSSEC) as defined by [RFC9364] was developed to address significant security integrity flaws in DNS. Within certain circumstances, information leakage may be possible stemming from a known DNSSEC vulnerability that facilitates a process known as zone walking, which enables the efficient collection of all FQDNs from a given environment. This document provides a solution, called Zone-Hopping, to address the domain information leakage via Zone-walking meanwhile preserving the integrity of the records for which DNSSEC was originally introduced.
+DNS Security Extension (DNSSEC) as defined by [RFC9364] was developed to address significant security integrity flaws in DNS. Within certain circumstances, information leakage may be possible stemming from a known DNSSEC vulnerability that facilitates a process known as zone walking, which enables the efficient collection of all FQDNs from a given environment. This document describes the problem space as outlined in [IEEE-ZoneHopping] and offers a potential solution, called Zone-Hopping, to aid in addressing the domain information leakage capable via Zone-walking while preserving the integrity of the records for which DNSSEC was originally introduced.
 
 --- middle
 
 # Introduction
 
-DNSSEC introduced the concept of authenticated denial of existence (referred as DoE from now on), where it proved that a negative response actually came from the authoritative server and not from an attacker. DNSSEC uses NSEC [RFC3845] or NSEC3 [RFC5155] records to provide authenticaled DoE protection where the domains or the hashes of the domains that encapsulates the queried domain is returned. The need to offer authenticated DoE as part of DNSSEC protocol protection coverage, opened up the protocol to an information leak problem, called zone-walking, in which an adversary can intentianally query non-existent domains and enumerate the complete zone from the owner names disclosed by the NSEC records. There are many tools available to easily enumerate the contents of a signed-zone, the result of which is similar to the result of a zone transfer process, which interestingly is not allowed from external sources.
+DNSSEC introduced the concept of authenticated denial of existence (referred as DoE from now on), where it proved that a negative response actually came from the authoritative server and not from an attacker. DNSSEC uses NSEC [RFC3845] or NSEC3 [RFC5155] records to provide authenticated DoE protection where the domains or the hashes of the domains that encapsulates the queried domain is returned. The need to offer authenticated DoE as part of DNSSEC protocol protection coverage, opened up the protocol to an information leak problem, called zone-walking, in which an adversary can intentionally query non-existent domains and enumerate the complete zone from the owner names disclosed by the NSEC records. There are many tools available to easily enumerate the contents of a signed-zone, the result of which is similar to the result of a zone transfer process, which interestingly is not allowed from external sources.
 
-RFC 4470 was introduced, in early 2006, to solve the zone walking problem. This RFC introduced the concept of ”Minimally Covering NSEC Records and DNSSEC Online Signing”, which describes a way to construct DNSSEC NSEC resource records that cover a smaller range of names. According to the RFC - ”Whenever an NSEC record is needed to prove the non-existence of a name, a new NSEC record
-is dynamically produced and signed. The new NSEC record has an owner name lexically before the QNAME (queried name) but lexically following any existing name and a ”next name” lexically following the QNAME but before any existing name.” The new NSEC record hence generated would still cover the non-existent query, but with the fake previous-name and the next name, effectively preventing the disclosure of zone contents. There were two adaptations found that were based on RFC 4470 - NSEC3 White lies and Black lies.
+# Overview
+
+[RFC4470] was introduced in early 2006 to solve the zone walking problem. This draft introduces the concept of ”Minimally Covering NSEC Records and DNSSEC Online Signing”, which describes a way to construct DNSSEC NSEC resource records that cover a smaller range of names. According to the RFC 4470:
+
+~~~~~~~~~~
+Whenever an NSEC record is needed to prove the non-existence of a name, a new NSEC record
+is dynamically produced and signed. The new NSEC record has an owner name lexically before the QNAME (queried name) but lexically following any existing name and a ”next name” lexically following the QNAME but before any existing name.
+~~~~~~~~~~
+
+The new NSEC record hence generated would still cover the non-existent query, but with the fake previous-name and the next name, effectively preventing the disclosure of zone contents. There were two adaptations found that were based on RFC 4470 - NSEC3 White lies and Black lies.
 
 As mentioned in RFC 4470 section 5, there are some security risks associated with the methods described above. First, in order to sign NSEC records on-the-fly, the private key needs to be available on the internet-accessible zone’s authoritative servers. Any unintended disclosure of the private key can compromise the whole zone. Second, generating signatures of NSEC records is computationally expensive and makes authoritative servers vulnerable to a denial of service (DoS) attacks. As mentioned, NSEC was added specifically to resolve denial of existence attacks and therefore ensure client’s requested domain is resolved. Ironically, these online signing approaches increase the computational load on the servers and therefore opens an avenue for DoS, which have the same impact as the attack that NSEC was designed to solve.
 
@@ -82,7 +90,7 @@ Black Lies (BL): Black Lies (BL), described in an RFC Internet draft in 2016, is
 
 
 # Practical Considerations:
-[RFC5155] NSEC3 record type was introduced in RFC 5155, that is implemented to prevent clear text retrieval of FQDNs, instead the hashed versions are returned. That wasn't found to be too useful, as most of the hashes suffer collision attacks and since most FQDNs strings are siple and predictable, it became easy to create rainbow tables and do offline cracking of the hashed domains.
+[RFC5155] NSEC3 record type was introduced in RFC 5155, that is implemented to prevent clear text retrieval of FQDNs, instead the hashed versions are returned. That wasn't found to be too useful, as most of the hashes suffer collision attacks and since most FQDNs strings are simple and predictable, it became easy to create rainbow tables and do offline cracking of the hashed domains.
 [RFC4470] As described in introduction the initial method to prevent zone-walking was introduced in RFC 4470, which has two practical implementations - NSEC3 White lies and Black lies (see the definitions section for the explanation).
 
 # Zone Hopping (ZH)
@@ -101,9 +109,7 @@ truncated for the better readability.
 
 Next, create a sensitive zone-file with all sensitive records, and again signed it with the same ZSK. The resulted signed zone is as follows.
 
-
 Then delete all NSEC records from the signed sensitive zone-file and combine the resulting zone-file with the signed public zone-file. The final signed zone is as follows.
-
 
 We used ldns to zone walk ”gotpcap.com”. Below are the results before applying the solution.
 
@@ -111,8 +117,8 @@ As can be seen below, the sensitive FQDNs are not longer discovered via zone-wal
 
 However, querying the sensitive FQDNs generates a valid response from the name-server.
 
-# Security Considerations of ZH
-The proposed method of ZH is susceptible to denial of existence attacks for sensitive FQDNs via record replay. However, one could argue that DoE attacks have same impact as denial of service (DoS) attacks. And in reality DoS attack is much more convinient than pulling off a successful DoE, as it doesn't require MiTM of the queries requested by the client to forge a spoofed response that could successfully deny the existance of a valid domain. Hence, we argue that there are far more better ways to DoS a DNS server than trying to DoS an individual resolver/client via a DoE attack.
+# Security Considerations
+The proposed method of ZH is susceptible to denial of existence attacks for sensitive FQDNs via record replay. However, one could argue that DoE attacks have same impact as denial of service (DoS) attacks. And in reality DoS attack is much more convenient than pulling off a successful DoE, as it doesn't require MiTM of the queries requested by the client to forge a spoofed response that could successfully deny the existence of a valid domain. Hence, we argue that there are far more better ways to DoS a DNS server than trying to DoS an individual resolver/client via a DoE attack.
 
 Combining the solution described above with the other available solutions, we have the following spectrum of solutions that should satisfy most use-cases.
 • DNSSEC-NSEC protects against denial of existence attacks, is not especially vulnerable to DoS attack, but is vulnerable to zone walking.
@@ -129,7 +135,6 @@ internal domains from being leaked to the public Internet. While this architectu
 # IANA Considerations
 
 This document has no IANA actions.
-
 
 --- back
 
