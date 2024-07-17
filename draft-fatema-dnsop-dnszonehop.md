@@ -52,7 +52,7 @@ informative:
 
 --- abstract
 
-DNS Security Extension (DNSSEC) as defined by [RFC9364] was developed to address significant security integrity flaws in DNS. Within certain circumstances, information leakage may be possible stemming from a known DNSSEC vulnerability that facilitates a process known as zone walking, which enables the efficient collection of all FQDNs from a given environment. This document describes the problem space and offers a potential solution, called Zone-Hopping, to aid in addressing the domain information leakage capable via Zone-walking while preserving the integrity of the records for which DNSSEC was originally introduced.
+DNS Security Extension (DNSSEC) as defined by [RFC9364] was developed to address significant security integrity flaws in DNS. Within certain circumstances, information leakage may be possible stemming from a known DNSSEC vulnerability that facilitates a process known as zone walking, which enables the efficient collection of all FQDNs from a given environment. This document describes the problem space as outlined in [IEEE-ZoneHopping] and offers a potential solution, called Zone-Hopping, to aid in addressing the domain information leakage capable via Zone-walking while preserving the integrity of the records for which DNSSEC was originally introduced.
 
 --- middle
 
