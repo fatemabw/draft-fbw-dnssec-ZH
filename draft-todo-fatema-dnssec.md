@@ -82,7 +82,7 @@ Black Lies (BL): Black Lies (BL), described in an RFC Internet draft in 2016, is
 
 
 # Practical Considerations:
-[RFC5155] NSEC3 record type was introduced in RFC 5155, that is implemented to prevent clear text retrieval of FQDNs, instead the hashed versions are returned. That wasn't found to be too useful, as most of the hashes suffer collision attacks and since most FQDNs strings are siple and predictable, it became easy to create rainbow tables and do offline cracking of the hashed domains. 
+[RFC5155] NSEC3 record type was introduced in RFC 5155, that is implemented to prevent clear text retrieval of FQDNs, instead the hashed versions are returned. That wasn't found to be too useful, as most of the hashes suffer collision attacks and since most FQDNs strings are siple and predictable, it became easy to create rainbow tables and do offline cracking of the hashed domains.
 [RFC4470] As described in introduction the initial method to prevent zone-walking was introduced in RFC 4470, which has two practical implementations - NSEC3 White lies and Black lies (see the definitions section for the explanation).
 
 # Zone Hopping (ZH)
