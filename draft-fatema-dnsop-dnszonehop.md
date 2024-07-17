@@ -3,7 +3,7 @@ title: "A method to prevent Zone-walking in DNSSEC-NSEC"
 abbrev: "Preventing zone-walking in DNSSEC-NSEC"
 category: info
 
-docname: draft-fbw-DNSOPS-ZH-latest
+docname: draft-fatema-dnsop-dnszonehop-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
